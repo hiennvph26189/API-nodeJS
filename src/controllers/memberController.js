@@ -135,6 +135,72 @@ let handleNapTienMenbers = async (req, res) => {
      }
    
 };
+let handleNapTienMenbersADmin = async (req, res) => {
+    try {
+        let data = req.body;
+        console.log(data);
+        let message = await  memberService.napTienMembersServiceAdmin(data)
+        console.log(message)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
+let handleHuyNapTienMenbersADmin = async (req, res) => {
+    try {
+        let data = req.body.id;
+        console.log(data);
+        let message = await  memberService.huyNapTienMembersServiceAdmin(data)
+        console.log(message)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
+let handleLichSuNapMenbers = async (req, res) => {
+    try {
+        let id = req.query.id
+            console.log(id,"akdljdaf")
+        let message = await  memberService.lichSuNapTienMembersService(id)
+        console.log(message)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
+let handleLichSuNapMenbersAdmin = async (req, res) => {
+    try {
+        let data = req.query.id
+        
+        let message = await  memberService.lichSuNapTienMembersService(data)
+        console.log(message)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
+
+
 
 module.exports = {
     handleGetAllMenbers:handleGetAllMenbers,
@@ -143,5 +209,10 @@ module.exports = {
     handleProfileMember:handleProfileMember,
     handleEditProfileMember:handleEditProfileMember,
     handleEditMenbers:handleEditMenbers,
-    handleNapTienMenbers:handleNapTienMenbers
+    handleNapTienMenbers:handleNapTienMenbers,
+    handleLichSuNapMenbers:handleLichSuNapMenbers,
+    handleLichSuNapMenbersAdmin:handleLichSuNapMenbersAdmin,
+    handleNapTienMenbersADmin:handleNapTienMenbersADmin,
+    handleHuyNapTienMenbersADmin:handleHuyNapTienMenbersADmin
+    
 }

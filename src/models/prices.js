@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     anhCK: DataTypes.TEXT,
     idUser: DataTypes.INTEGER,
     tienNap: DataTypes.INTEGER,
-    idSP : DataTypes.INTEGER,
+    
     status: DataTypes.INTEGER,
    
    

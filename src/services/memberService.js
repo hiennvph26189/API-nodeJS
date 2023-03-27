@@ -300,17 +300,122 @@ let napTienMembersService = (data)=>{
                 errMessage:"Members không tồn tại"
             })
         }else{
+            
             await db.Prices.create({
                 anhCK: data.anhCK,
                 idUser: data.idUser,
                 tienNap: data.tienNap,
-                status: 0
+                status: data.status
              })
+             await db.Members.update(
+                {status: 1},
+                {where: {id:data.idUser}}
+             )
              resolve({
                 errCode: 0,
                 errMessage:"Đã nạp tiền"
             })
         }  
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
+let lichSuNapTienMembersService = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        console.log(id,"adfadf")
+       try {
+        // console.log(data.idUser);
+        let isExit = checkUserMember(id)
+        // console.log(isExit)
+        
+        if(isExit === false){
+            resolve({
+                errCode: 2,
+                errMessage:"Members không tồn tại"
+            })
+        }else{
+            let res = {}
+            let price = await db.Prices.findAll({  
+                where: {idUser: id}, 
+            });
+            res.errCode = 0;
+            res.errMessage = "OK",
+            res.data = price;
+           
+            resolve(res)
+        }  
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
+let napTienMembersServiceAdmin = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+       try {
+        // console.log(data.idUser);
+        let isExit = checkUserMember(data.idUser)
+        // console.log(isExit)
+        
+        if(isExit === false){
+            resolve({
+                errCode: 2,
+                errMessage:"Members không tồn tại"
+            })
+        }else{
+            let price = await db.Members.findOne({
+                where: {id: data.idUser}
+                })
+            let priceMembers = price.tienTk 
+            await db.Prices.update(
+                {
+                status: 1
+                },
+                {where: {id:data.id}}
+             )
+             await db.Members.update(
+                {status: 0,
+                tienTk: parseInt(priceMembers) +parseInt(data.tienNap) 
+                },
+                {where: {id:data.idUser}}
+             )
+             resolve({
+                errCode: 0,
+                errMessage:"Đã nạp tiền"
+            })
+        }  
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
+let huyNapTienMembersServiceAdmin = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+       try {
+        // console.log(data.idUser);
+        // let isExit = checkUserMember(data.idUser)
+        // console.log(isExit)
+        
+      
+            await db.Prices.update(
+                {status: 2,
+                
+                },
+                {where: {id:id}}
+             )
+             resolve({
+                errCode: 0,
+                errMessage:"Đã hủy nạp tiền"
+            })
+          
        } catch (error) {
             reject(error);
        }
@@ -325,7 +430,10 @@ module.exports  = {
     ProfileMembersService:ProfileMembersService,
     EditProfileMembersService:EditProfileMembersService,
     EditMembersService:EditMembersService,
-    napTienMembersService:napTienMembersService
+    napTienMembersService:napTienMembersService,
+    lichSuNapTienMembersService:lichSuNapTienMembersService,
+    napTienMembersServiceAdmin:napTienMembersServiceAdmin,
+    huyNapTienMembersServiceAdmin:huyNapTienMembersServiceAdmin
     
     
 }
