@@ -24,6 +24,29 @@ let handleGetAllProductsService = ()=>{
          
      }) 
 }
+let handleGetAllProductsCategoriesService = (idCategories)=>{
+    return new Promise(async(resolve, reject)=>{
+        try {
+            let res = {}
+            let products = await db.Products.findAll({
+                where: {idDanhSach: idCategories}
+            });
+            
+            res.errCode = 0;
+            res.errMessage = "OK",
+            res.products = products;
+            
+            resolve(res)
+            
+         resolve(res);
+ 
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
 let handleGetProductsService = (page)=>{
     return new Promise(async(resolve, reject)=>{
         try {
@@ -180,6 +203,7 @@ module.exports  = {
     deleteProduct:deleteProduct,
     editProductsService:editProductsService,
     handleGetProductsService:handleGetProductsService,
+    handleGetAllProductsCategoriesService
     
     
 }
