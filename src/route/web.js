@@ -49,8 +49,13 @@ let initWebRouter = (app)=>{
     router.post('/api/post-image-product',uploadCloud.single('image'),productController.handleUploadFileProduct);
     router.post('/api/delete-image-product',productController.handleDeleteFileProduct);
 
-   
+    router.get('/api/user-carts-product',odersController.handleGetUserCartProducts);
     router.post('/api/oders-product',odersController.handleOdersProducts);
+    router.delete('/api/delete-cart-product',odersController.handleDeleteCartProducts);
+    router.put('/api/update-cart-product',odersController.handleUpdateCartProducts);
+
+
+
     // API Members webADmin
     router.get('/api/get-all-members',memberController.handleGetAllMenbers);
     router.put('/api/edit-members',memberController.handleEditMenbers);
@@ -67,6 +72,8 @@ let initWebRouter = (app)=>{
     router.post('/api/profile-member',memberController.handleProfileMember);
     router.put('/api/edit-profile-member',memberController.handleEditProfileMember);
     router.get('/api/get-all-product-category',productController.handleGetAllProductsCategories);
+
+
 
 
     return app.use("/",router)
