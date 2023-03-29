@@ -277,6 +277,7 @@ let handleCreateOrderCart = (data)=>{
 }
 
 let handleLichSuOrderCart = (id)=>{
+    
     return new Promise(async (resolve, reject)=>{
         try {
             let checkUser = await checkUserMember(id)
@@ -294,12 +295,24 @@ let handleLichSuOrderCart = (id)=>{
                        
                     ]
                 })
+                let getCarts = await db.Carts.findAll({
+                    where: {idUser: id,
+                        status : 1
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+                let getAllProducts = await db.Products.findAll()
                 
                if(User){
                 resolve({
                     errCode: 0,
                     errMessage :"List thành công",
-                    getOrders :getOrders
+                    getOrders :getOrders,
+                    getCarts:getCarts,
+                    getAllProducts:getAllProducts
                 })
                }else{
                 resolve({

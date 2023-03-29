@@ -72,7 +72,7 @@ let handleOrserCartProducts = async (req, res) => {
 let handleLichSuCartProducts = async (req, res) => {
     try {
         let id = req.query.id
-        console.log(data)
+       
         let message = await  odersService.handleLichSuOrderCart(id)
         return res.status(200).json(message)
      } catch (error) {
