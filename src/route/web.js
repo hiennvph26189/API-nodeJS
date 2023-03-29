@@ -53,6 +53,9 @@ let initWebRouter = (app)=>{
     router.post('/api/oders-product',odersController.handleOdersProducts);
     router.delete('/api/delete-cart-product',odersController.handleDeleteCartProducts);
     router.put('/api/update-cart-product',odersController.handleUpdateCartProducts);
+    router.post('/api/orders-cart-product',odersController.handleOrserCartProducts);
+    router.get('/api/lich-su-cart-product',odersController.handleLichSuCartProducts);
+
 
 
 

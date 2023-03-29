@@ -123,12 +123,6 @@ let handleAddCart = (data)=>{
                         errMessage:"Sản phẩm hoặc user không tồn tại"
                     })
                 }
-               
-          
-           
-            
-        
- 
         } catch (error) {
              reject(error);
         }
@@ -195,6 +189,7 @@ let handleUpdateCart = (data)=>{
                 {
                     soLuong: data.soLuong,
                     thanhTien: dataProduct.sale ==0?dataProduct.giaSanPham *data.soLuong:(dataProduct.giaSanPham-(dataProduct.giaSanPham*dataProduct.sale/100))*data.soLuong,
+                    size: data.size
                 },
                 {where: {id: data.id}}
              )
@@ -212,10 +207,127 @@ let handleUpdateCart = (data)=>{
          
      }) 
 }
+let handleCreateOrderCart = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+        try {
+
+            let idCart = [...data.idCart]
+            let idUser = data.idUser
+            
+            let user = await db.Members.findOne({
+                where : {id : idUser}
+            })
+            let tienTk = user.tienTk
+            console.log(idCart.length)
+            if(idCart.length>0){
+                if(user){
+                        await db.Orders.create({
+                            idCart: data.idCart,
+                            idUser: idUser,
+                            tongTien: data.tongTien,
+                            status: 0
+                        })
+                        await db.Carts.update(
+                            {status: 1},
+                            {
+                            where: {idUser:idUser,
+                                    status: 0
+                                }
+                            }
+                        )
+                        await db.Members.update(
+                            {tienTk: tienTk - data.tongTien },
+                            {
+                            where: {id : idUser}
+                            }
+                        )
+                        
+                        resolve({
+                            errCode:0,
+                            errMessage: 'Đã đặt hàng thành công vui lòng chờ bên shop giao hàng'
+                         })
+                        
+                   
+                    
+                }else{
+                    resolve({
+                        errCode:1,
+                        errMessage: 'User không tồn tại'
+                     })
+                }
+            }else{
+                resolve({
+                    errCode:3,
+                    errMessage: 'Không có sản phẩm nào trong giỏ hàng'
+                 })
+            }
+           
+           
+    
+         
+     
+       
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+
+let handleLichSuOrderCart = (id)=>{
+    return new Promise(async (resolve, reject)=>{
+        try {
+            let checkUser = await checkUserMember(id)
+            let User = await db.Members.findOne({
+                where: {id:id }
+            })
+            if(checkUser){
+                
+               let getOrders = await db.Orders.findAll({
+                    where: {idUser: id,
+                        status : 0
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+                
+               if(User){
+                resolve({
+                    errCode: 0,
+                    errMessage :"List thành công",
+                    getOrders :getOrders
+                })
+               }else{
+                resolve({
+                    errCode: 0,
+                    errMessage :"User không tồn tại",
+                    
+                })
+               }
+ 
+            }else{
+                resolve({
+                    errCode: 1,
+                    errMessage:"User không tồn tại",
+
+                })
+            }
+          
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 module.exports  = {
     handleAddCart:handleAddCart,
     handleDeleteCart:handleDeleteCart,
     handleGetUserCart:handleGetUserCart,
-    handleUpdateCart:handleUpdateCart
+    handleUpdateCart:handleUpdateCart,
+    handleCreateOrderCart:handleCreateOrderCart,
+    handleLichSuOrderCart:handleLichSuOrderCart
     
 }
