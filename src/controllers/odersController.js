@@ -83,6 +83,47 @@ let handleLichSuCartProducts = async (req, res) => {
         })
      } 
 }
+let handleHuyDonCartProducts = async (req, res) => {
+    try {
+        let id = req.body.id
+        console.log(id)
+        let message = await  odersService.handleHuyOrderCart(id)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
+let handleChiTietDonProducts = async (req, res) => {
+    try {
+        let id = req.query.id
+        console.log(id)
+        let message = await  odersService.handleChiTietOrderCart(id)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
+let handleGetAllOrdersProducts = async (req, res) => {
+    try {
+       
+        let message = await  odersService.handleGetAllOrder()
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
 
 module.exports = {
     handleOdersProducts: handleOdersProducts,
@@ -90,6 +131,9 @@ module.exports = {
     handleGetUserCartProducts:handleGetUserCartProducts,
     handleUpdateCartProducts:handleUpdateCartProducts,
     handleOrserCartProducts:handleOrserCartProducts,
-    handleLichSuCartProducts:handleLichSuCartProducts
+    handleLichSuCartProducts:handleLichSuCartProducts,
+    handleHuyDonCartProducts:handleHuyDonCartProducts,
+    handleChiTietDonProducts:handleChiTietDonProducts,
+    handleGetAllOrdersProducts:handleGetAllOrdersProducts
   
 }

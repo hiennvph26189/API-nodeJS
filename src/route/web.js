@@ -50,11 +50,15 @@ let initWebRouter = (app)=>{
     router.post('/api/delete-image-product',productController.handleDeleteFileProduct);
 
     router.get('/api/user-carts-product',odersController.handleGetUserCartProducts);
+   
     router.post('/api/oders-product',odersController.handleOdersProducts);
     router.delete('/api/delete-cart-product',odersController.handleDeleteCartProducts);
     router.put('/api/update-cart-product',odersController.handleUpdateCartProducts);
     router.post('/api/orders-cart-product',odersController.handleOrserCartProducts);
     router.get('/api/lich-su-cart-product',odersController.handleLichSuCartProducts);
+    router.put('/api/huy-don-cart-product',odersController.handleHuyDonCartProducts);
+    router.get('/api/chi-tiet-don-cart-product',odersController.handleChiTietDonProducts);
+    router.get('/api/get-all-orders-product',odersController.handleGetAllOrdersProducts);
 
 
 

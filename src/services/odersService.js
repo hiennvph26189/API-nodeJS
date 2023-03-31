@@ -295,9 +295,37 @@ let handleLichSuOrderCart = (id)=>{
                        
                     ]
                 })
-                let getCarts = await db.Carts.findAll({
+                let getDaDangGiao = await db.Orders.findAll({
                     where: {idUser: id,
                         status : 1
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+                let getCarts = await db.Carts.findAll({
+                    where: {idUser: id,
+                            status : 1,
+                            
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+                 let getDaGiaoThanhCong = await db.Orders.findAll({
+                    where: {idUser: id,
+                        status : 2
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+                let getDonHuy = await db.Orders.findAll({
+                    where: {idUser: id,
+                        status : 5
                     },
                     order: [
                         ['id', 'DESC'],
@@ -312,7 +340,11 @@ let handleLichSuOrderCart = (id)=>{
                     errMessage :"List thành công",
                     getOrders :getOrders,
                     getCarts:getCarts,
-                    getAllProducts:getAllProducts
+                    getAllProducts:getAllProducts,
+                    getDaGiaoThanhCong:getDaGiaoThanhCong,
+                    getDaDangGiao:getDaDangGiao,
+                    getDonHuy:getDonHuy
+
                 })
                }else{
                 resolve({
@@ -335,12 +367,124 @@ let handleLichSuOrderCart = (id)=>{
         }
     })
 }
+let handleHuyOrderCart = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        console.log(id)
+        try {
+         let Order = await  db.Orders.findOne({
+            where: {id: id},  
+         });
+
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+            await db.Orders.update(
+                {status: 5},
+                {where: {id: id}}
+             )
+             
+             resolve({
+                errCode:0,
+                errMessage: 'update thành công'
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleChiTietOrderCart = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        console.log(id)
+        try {
+         let Order = await  db.Orders.findOne({
+            where: {id: id},  
+         });
+
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+             resolve({
+                errCode:0,
+                errMessage: 'thành công',
+                detailOrder: Order
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleGetAllOrder = ()=>{
+    return new Promise(async(resolve, reject)=>{
+        
+        try {
+         let Order = await  db.Orders.findAll({
+            order: [
+                ['id', 'DESC'],
+               
+            ]
+         });
+       
+         let getCarts = await db.Carts.findAll({
+            where: {
+                    status : 1,
+                    
+            },
+            order: [
+                ['id', 'DESC'],
+               
+            ]
+        })
+
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+             resolve({
+                errCode:0,
+                errMessage: 'thành công',
+                getAllOrder: Order,
+                getCarts: getCarts
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
 module.exports  = {
     handleAddCart:handleAddCart,
     handleDeleteCart:handleDeleteCart,
     handleGetUserCart:handleGetUserCart,
     handleUpdateCart:handleUpdateCart,
     handleCreateOrderCart:handleCreateOrderCart,
-    handleLichSuOrderCart:handleLichSuOrderCart
+    handleLichSuOrderCart:handleLichSuOrderCart,
+    handleHuyOrderCart:handleHuyOrderCart,
+    handleChiTietOrderCart:handleChiTietOrderCart,
+    handleGetAllOrder:handleGetAllOrder
     
 }
