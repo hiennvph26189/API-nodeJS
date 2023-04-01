@@ -124,6 +124,62 @@ let handleGetAllOrdersProducts = async (req, res) => {
         })
      } 
 }
+let handleHuyDonThanhCongProducts = async (req, res) => {
+    try {
+        let data = req.body
+        console.log(data,"kd;adf")
+        let message = await  odersService.handleHuyDonThanhCongService(data)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
+let handleDeleteOrder = async (req, res) => {
+    try {
+        let id = req.query.id
+        
+        let message = await  odersService.handleDeleteOrderService(id)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
+let handleCheckOrder = async (req, res) => {
+    try {
+        let data = req.body
+        
+        let message = await  odersService.handleCheckOrderService(data)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
+let handleGiaoDonOrder = async (req, res) => {
+    try {
+        let data = req.body
+        
+        let message = await  odersService.handleGiaoDonService(data)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
 
 module.exports = {
     handleOdersProducts: handleOdersProducts,
@@ -134,6 +190,10 @@ module.exports = {
     handleLichSuCartProducts:handleLichSuCartProducts,
     handleHuyDonCartProducts:handleHuyDonCartProducts,
     handleChiTietDonProducts:handleChiTietDonProducts,
-    handleGetAllOrdersProducts:handleGetAllOrdersProducts
+    handleGetAllOrdersProducts:handleGetAllOrdersProducts,
+    handleHuyDonThanhCongProducts:handleHuyDonThanhCongProducts,
+    handleDeleteOrder:handleDeleteOrder,
+    handleCheckOrder:handleCheckOrder,
+    handleGiaoDonOrder:handleGiaoDonOrder
   
 }

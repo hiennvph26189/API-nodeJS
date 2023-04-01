@@ -59,6 +59,10 @@ let initWebRouter = (app)=>{
     router.put('/api/huy-don-cart-product',odersController.handleHuyDonCartProducts);
     router.get('/api/chi-tiet-don-cart-product',odersController.handleChiTietDonProducts);
     router.get('/api/get-all-orders-product',odersController.handleGetAllOrdersProducts);
+    router.put('/api/huy-orders-success-product',odersController.handleHuyDonThanhCongProducts);
+    router.delete('/api/delete-orders',odersController.handleDeleteOrder);
+    router.put('/api/check-orders',odersController.handleCheckOrder);
+    router.put('/api/giao-don-orders',odersController.handleGiaoDonOrder);
 
 
 

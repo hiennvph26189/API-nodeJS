@@ -1,4 +1,5 @@
 import db from "../models/index";
+const Op = require('sequelize').Op;
 let checkProducts = (id)=>{
     return new Promise(async (resolve, reject)=>{
         try {
@@ -288,7 +289,11 @@ let handleLichSuOrderCart = (id)=>{
                 
                let getOrders = await db.Orders.findAll({
                     where: {idUser: id,
-                        status : 0
+                       [Op.or]: [
+                            { status: 0 },
+                            { status: 1 }
+                          ]
+                            
                     },
                     order: [
                         ['id', 'DESC'],
@@ -297,7 +302,7 @@ let handleLichSuOrderCart = (id)=>{
                 })
                 let getDaDangGiao = await db.Orders.findAll({
                     where: {idUser: id,
-                        status : 1
+                        status : 2
                     },
                     order: [
                         ['id', 'DESC'],
@@ -316,7 +321,7 @@ let handleLichSuOrderCart = (id)=>{
                 })
                  let getDaGiaoThanhCong = await db.Orders.findAll({
                     where: {idUser: id,
-                        status : 2
+                        status : 3
                     },
                     order: [
                         ['id', 'DESC'],
@@ -325,7 +330,10 @@ let handleLichSuOrderCart = (id)=>{
                 })
                 let getDonHuy = await db.Orders.findAll({
                     where: {idUser: id,
-                        status : 5
+                        [Op.or]: [
+                            { status: 4 },
+                            { status: 5 }
+                          ]
                     },
                     order: [
                         ['id', 'DESC'],
@@ -383,7 +391,7 @@ let handleHuyOrderCart = (id)=>{
            
          }else{
             await db.Orders.update(
-                {status: 5},
+                {status: 4},
                 {where: {id: id}}
              )
              
@@ -476,6 +484,205 @@ let handleGetAllOrder = ()=>{
          
      }) 
 }
+let handleHuyDonThanhCongService = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+        let id = data.id;
+        // let arrCarts =JSON.parse(data.arrCarts) ;
+        // let arrCartsData = [];
+        let idUser = data.idUser;
+        let tongTien = data.tongTien
+        try {
+         let Order = await  db.Orders.findOne({
+            where: {id: id},  
+         });
+         let user = await  db.Members.findOne({
+            where: {id: idUser},  
+         });
+        //  let arrCartsItem = await db.Carts.findAll()
+        //  arrCartsItem.map((arrCartsItem) =>{
+        //     arrCarts.map((item)=>{
+        //         if(arrCartsItem.id === item){
+        //             arrCartsData.push(arrCartsItem)
+        //         }
+        //     })
+        //  })
+         let soDu = user.tienTk
+        //  let arrProduct =  await db.Products.findAll()
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+            await db.Orders.update(
+                {status: 5},
+                {where: {id: id}}
+             )
+             await db.Members.update(
+                {tienTk: soDu+tongTien},
+                {where: {id: idUser}}
+             )
+            //  arrCartsData.map((itemArrCartsData)=>{
+            //     arrProduct.map((productArr)=>{
+            //         if(itemArrCartsData.ipSanPham===productArr.id){
+            //              db.Products.update(
+            //                 {soluong: arrProduct.soLuong-arrCartsData.soLuong},
+            //                 {where: {id: itemArrCartsData.ipSanPham}}
+            //              )
+            //         }
+            //     })
+            //  })
+             resolve({
+                errCode:0,
+                errMessage: 'thành công',
+               
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleDeleteOrderService = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+        try {
+            
+         let Order = await  db.Orders.findOne({
+            where: {id: id},  
+         });
+
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+            await  db.Orders.destroy(
+                {
+                    where: {id: id}
+                }
+            )
+             resolve({
+
+                errCode:0,
+                errMessage: 'thành công',
+               
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleCheckOrderService = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+        try {
+            let idUser = data.idUser
+            let id = data.id
+            let arrCartsItem = await db.Carts.findAll({
+                where: {idUser:idUser}
+            })
+            let Order = await  db.Orders.findOne({
+                where: {id: id},  
+            });
+            let arrCartsUser = []
+            let arrProduct =  await db.Products.findAll()
+            let arrCarts = JSON.parse(data.arrCarts)
+            
+            arrCarts.map((item)=>{
+                arrCartsItem.map((arrCartsItems)=>{
+                    if(arrCartsItems.id === item){
+                        arrCartsUser.push(arrCartsItems)
+                    }
+                })
+            })
+          
+            
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+            await db.Orders.update(
+                {status: 1},
+                {where: {id: id}}
+             )
+            arrCartsUser.map((item)=>{
+                arrProduct.map( async(products)=>{
+                    if(item.ipSanPham === products.id){
+                        await db.Products.update(
+                            {soLuong: products.soLuong - item.soLuong},
+                            {where: {id: item.ipSanPham}}
+                         )
+                    }
+                })
+            })
+             resolve({
+
+                errCode:0,
+                errMessage: 'thành công',
+               
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleGiaoDonService = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+       
+        try {
+            let id = data.id
+            let status = data.status
+            let Order = await  db.Orders.findOne({
+                where: {id: id},  
+            });
+
+         if(!Order){
+            resolve({
+                errCode: 2,
+                errMessage: 'đơn hàng không tồn tại',
+            })
+           
+         }else{
+            await db.Orders.update(
+                {status: status},
+                {where: {id: id}}
+             )
+             resolve({ 
+                errCode:0,
+                errMessage: 'thành công',
+                
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
 module.exports  = {
     handleAddCart:handleAddCart,
     handleDeleteCart:handleDeleteCart,
@@ -485,6 +692,10 @@ module.exports  = {
     handleLichSuOrderCart:handleLichSuOrderCart,
     handleHuyOrderCart:handleHuyOrderCart,
     handleChiTietOrderCart:handleChiTietOrderCart,
-    handleGetAllOrder:handleGetAllOrder
+    handleGetAllOrder:handleGetAllOrder,
+    handleHuyDonThanhCongService:handleHuyDonThanhCongService,
+    handleDeleteOrderService:handleDeleteOrderService,
+    handleCheckOrderService:handleCheckOrderService,
+    handleGiaoDonService:handleGiaoDonService
     
 }
