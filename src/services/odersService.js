@@ -109,7 +109,7 @@ let handleAddCart = (data)=>{
                         ipSanPham: dataProduct.id,
                         idUser: idUsers,
                         size: data.size,
-                        soLuong: 1,
+                        soLuong: data.soLuong,
                         thanhTien: dataProduct.sale ==0?dataProduct.giaSanPham:(dataProduct.giaSanPham-(dataProduct.giaSanPham*dataProduct.sale/100)),
                         status: 0
                     })
@@ -299,6 +299,21 @@ let handleLichSuOrderCart = (id)=>{
                         ['id', 'DESC'],
                        
                     ]
+                }) 
+                let getAllOrder = await db.Orders.findAll({
+                    where: {idUser: id,
+                       [Op.or]: [
+                            { status: 0 },
+                            { status: 1 },
+                            { status: 2 },
+                            { status: 3 },
+                          ]
+                            
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
                 })
                 let getDaDangGiao = await db.Orders.findAll({
                     where: {idUser: id,
@@ -351,7 +366,8 @@ let handleLichSuOrderCart = (id)=>{
                     getAllProducts:getAllProducts,
                     getDaGiaoThanhCong:getDaGiaoThanhCong,
                     getDaDangGiao:getDaDangGiao,
-                    getDonHuy:getDonHuy
+                    getDonHuy:getDonHuy,
+                    getAllOrder:getAllOrder
 
                 })
                }else{

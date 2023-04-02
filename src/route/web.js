@@ -42,6 +42,7 @@ let initWebRouter = (app)=>{
     
 
     router.get('/api/get-all-product',productController.handleGetAllProducts);
+    router.get('/api/get-one-product',productController.handleGetOneProducts);
     router.post('/api/add-product',productController.handleAddProducts);
     router.delete('/api/delete-product',productController.handleDeleteProduct);
     router.put('/api/edit-product',productController.handleEditProduct);

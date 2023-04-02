@@ -47,7 +47,8 @@ let handleGetAllProductsCategoriesService = (idCategories)=>{
          
      }) 
 }
-let handleGetProductsService = (page)=>{
+
+let handleGetProductsService = (id)=>{
     return new Promise(async(resolve, reject)=>{
         try {
             let res = {}
@@ -147,6 +148,46 @@ let deleteProduct = (id)=>{
          
      }) 
 }
+let handleGetOneProductService = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        try {
+         let products = await  db.Products.findOne({
+            where: {id: id},
+            
+            
+         });
+         let arProduct = await  db.Products.findAll(
+            {where: {idDanhSach : products.idDanhSach,
+                }
+                    
+            },
+            {limit: 5}
+            
+            
+         );
+         if(!products){
+            resolve({
+                errCode: 2,
+                errMessage: 'sản phẩm không tồn tại',
+            })
+           
+         }else{
+             resolve({
+                errCode:0,
+                errMessage: ' thành công',
+                getDetailProduct: products,
+                arProduct:arProduct
+             })
+         }
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
 let editProductsService = (data)=>{
     return new Promise(async(resolve, reject)=>{
         console.log(data.dataImput,"adadfadf");
@@ -203,7 +244,8 @@ module.exports  = {
     deleteProduct:deleteProduct,
     editProductsService:editProductsService,
     handleGetProductsService:handleGetProductsService,
-    handleGetAllProductsCategoriesService
+    handleGetAllProductsCategoriesService,
+    handleGetOneProductService:handleGetOneProductService
     
     
 }
