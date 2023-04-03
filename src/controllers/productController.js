@@ -4,11 +4,10 @@ import multer from 'multer';
 import path from 'path';
 import  uploadCloud from '../config/uploadFile'
 let handleGetAllProducts = async (req, res) => {
-    
-  
+
     try {
-       
-            let data = await productSercive.handleGetAllProductsService();
+            let page = req.query.page
+            let data = await productSercive.handleGetAllProductsService(page);
         return res.status(200).json(data)
         
          

@@ -641,7 +641,9 @@ let handleCheckOrderService = (data)=>{
                 arrProduct.map( async(products)=>{
                     if(item.ipSanPham === products.id){
                         await db.Products.update(
-                            {soLuong: products.soLuong - item.soLuong},
+                            {soLuong: products.soLuong - item.soLuong,
+                            luotMua: products.luotMua + item.soLuong
+                            },
                             {where: {id: item.ipSanPham}}
                          )
                     }

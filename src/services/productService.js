@@ -3,16 +3,25 @@ import db from "../models/index";
 
 
 
-let handleGetAllProductsService = ()=>{
+let handleGetAllProductsService = (page)=>{
     return new Promise(async(resolve, reject)=>{
         try {
+            console.log(page)
+            let limit = 5;
+            let offset = (page - 1) * limit;
             let res = {}
-            let products = await db.Products.findAll();
+            let products = await db.Products.findAndCountAll({
+                offset,
+                limit
+              });
             let categories = await db.Categories.findAll();
+            let totalProducts = await db.Products.findAll();
             res.errCode = 0;
             res.errMessage = "OK",
-            res.products = products;
+            res.products = products.rows ;
             res.categories = categories;
+            res.totalProducts = totalProducts;
+            
             resolve(res)
             
          resolve(res);
