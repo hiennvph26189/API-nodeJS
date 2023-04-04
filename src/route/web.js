@@ -7,6 +7,7 @@ import categoryController from "../controllers/categoryController";
 import productController from "../controllers/productController";
 import odersController from "../controllers/odersController";
 import memberController from "../controllers/memberController";
+import newsController from "../controllers/newsController";
 import appRoot from "app-root-path"
 import  uploadCloud from '../config/uploadFile'
 let router = express.Router();
@@ -39,8 +40,13 @@ let initWebRouter = (app)=>{
     router.put('/api/edit-categories',categoryController.handleEditCategories);
     router.delete('/api/delete-categories',categoryController.handleDeleteCategory);
 
-    
+    // api News
+    router.get('/api/get-all-news',newsController.handleGetAllNews);
+    router.post('/api/add-news',newsController.handleAddNews);
 
+
+
+    // api products
     router.get('/api/get-all-product',productController.handleGetAllProducts);
     router.get('/api/get-one-product',productController.handleGetOneProducts);
     router.get('/api/get-all-total-product',productController.handleGetAllTotalProducts);

@@ -455,42 +455,80 @@ let handleChiTietOrderCart = (id)=>{
          
      }) 
 }
-let handleGetAllOrder = ()=>{
+let handleGetAllOrder = (status)=>{
     return new Promise(async(resolve, reject)=>{
         
         try {
-         let Order = await  db.Orders.findAll({
-            order: [
-                ['id', 'DESC'],
+            if(status =="All"){
+                let Order = await  db.Orders.findAll({
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                 });
                
-            ]
-         });
-       
-         let getCarts = await db.Carts.findAll({
-            where: {
-                    status : 1,
-                    
-            },
-            order: [
-                ['id', 'DESC'],
+                 let getCarts = await db.Carts.findAll({
+                    where: {
+                            status : 1,
+                            
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+        
+                 if(!Order){
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'đơn hàng không tồn tại',
+                    })
+                   
+                 }else{
+                     resolve({
+                        errCode:0,
+                        errMessage: 'thành công',
+                        getAllOrder: Order,
+                        getCarts: getCarts
+                     })
+                 }
+            }else{
+                let Order = await  db.Orders.findAll({
+                    where: {status:status},
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                 });
                
-            ]
-        })
+                 let getCarts = await db.Carts.findAll({
+                    where: {
+                            status : 1,
+                            
+                    },
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                })
+        
+                 if(!Order){
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'đơn hàng không tồn tại',
+                    })
+                   
+                 }else{
+                     resolve({
+                        errCode:0,
+                        errMessage: 'thành công',
+                        getAllOrder: Order,
+                        getCarts: getCarts
+                     })
+                 }
 
-         if(!Order){
-            resolve({
-                errCode: 2,
-                errMessage: 'đơn hàng không tồn tại',
-            })
-           
-         }else{
-             resolve({
-                errCode:0,
-                errMessage: 'thành công',
-                getAllOrder: Order,
-                getCarts: getCarts
-             })
-         }
+            }
+         
          
   
         } catch (error) {
@@ -634,7 +672,7 @@ let handleCheckOrderService = (data)=>{
            
          }else{
             await db.Orders.update(
-                {status: 1},
+                {status: 2},
                 {where: {id: id}}
              )
             arrCartsUser.map((item)=>{

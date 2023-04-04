@@ -113,8 +113,8 @@ let handleChiTietDonProducts = async (req, res) => {
 }
 let handleGetAllOrdersProducts = async (req, res) => {
     try {
-       
-        let message = await  odersService.handleGetAllOrder()
+        let status = req.query.status
+        let message = await  odersService.handleGetAllOrder(status)
         return res.status(200).json(message)
      } catch (error) {
          console.log("Lỗi phân quyền",error)
