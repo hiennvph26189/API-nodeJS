@@ -20,6 +20,23 @@ let handleGetAllProducts = async (req, res) => {
      }
    
 };
+let handleGetAllTotalProducts = async (req, res) => {
+
+    try {
+            
+            let data = await productSercive.handleGetAllTotalProductsService();
+            return res.status(200).json(data)
+        
+         
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
 let handleAddProducts = async (req, res) => {
     
   
@@ -141,7 +158,8 @@ module.exports = {
     handleUploadFileProduct:handleUploadFileProduct,
     handleDeleteFileProduct:handleDeleteFileProduct,
     handleGetAllProductsCategories:handleGetAllProductsCategories,
-    handleGetOneProducts:handleGetOneProducts
+    handleGetOneProducts:handleGetOneProducts,
+    handleGetAllTotalProducts:handleGetAllTotalProducts
    
     
 }

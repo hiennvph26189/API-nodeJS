@@ -12,13 +12,53 @@ let handleGetAllProductsService = (page)=>{
             let res = {}
             let products = await db.Products.findAndCountAll({
                 offset,
-                limit
-              });
+                limit,
+                order: [
+                    ['id', 'DESC'],
+                    
+                ]
+                  
+              },);
             let categories = await db.Categories.findAll();
-            let totalProducts = await db.Products.findAll();
+            let totalProducts = await db.Products.findAll({
+                order: [
+                    ['id', 'DESC'],
+                   
+                ]
+            });
             res.errCode = 0;
             res.errMessage = "OK",
             res.products = products.rows ;
+            res.categories = categories;
+            res.totalProducts = totalProducts;
+            
+            resolve(res)
+            
+         resolve(res);
+ 
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
+let handleGetAllTotalProductsService = ()=>{
+    return new Promise(async(resolve, reject)=>{
+        try {
+           
+           
+            let res = {}
+            let categories = await db.Categories.findAll({
+                order: [
+                    ['id', 'DESC'],
+                   
+                ]
+            });
+            let totalProducts = await db.Products.findAll();
+            res.errCode = 0;
+            res.errMessage = "OK",
+
             res.categories = categories;
             res.totalProducts = totalProducts;
             
@@ -37,9 +77,17 @@ let handleGetAllProductsCategoriesService = (idCategories)=>{
     return new Promise(async(resolve, reject)=>{
         try {
             let res = {}
-            let products = await db.Products.findAll({
+            let products = await db.Products.findAll(
+                {
                 where: {idDanhSach: idCategories}
-            });
+                
+                },{
+                    order: [
+                        ['id', 'DESC'],
+                       
+                    ]
+                }
+            );
             
             res.errCode = 0;
             res.errMessage = "OK",
@@ -93,6 +141,7 @@ let AddProductsService = (data)=>{
                         tenSp: data.tenSp,
                         hangSx: data.hangSx,
                         giaSanPham: data.giaSanPham,
+                        giaNhap: data.giaNhap,
                         idDanhSach: data.idDanhSach,
                         soLuong: data.soLuong,
                         hot: data.hot,
@@ -189,6 +238,7 @@ let handleGetOneProductService = (id)=>{
              })
          }
          
+         
   
         } catch (error) {
              reject(error);
@@ -219,6 +269,7 @@ let editProductsService = (data)=>{
                 products.hangSx= data.dataImput.hangSx,
                 products.giaSanPham= data.dataImput.giaSanPham,
                 products.idDanhSach= data.dataImput.idDanhSach,
+                products.giaNhap= data.dataImput.giaNhap,
                 products.hot= data.dataImput.hot,
                 products.sale= data.dataImput.sale,
                 products.soLuong= data.dataImput.soLuong,
@@ -254,7 +305,8 @@ module.exports  = {
     editProductsService:editProductsService,
     handleGetProductsService:handleGetProductsService,
     handleGetAllProductsCategoriesService,
-    handleGetOneProductService:handleGetOneProductService
+    handleGetOneProductService:handleGetOneProductService,
+    handleGetAllTotalProductsService:handleGetAllTotalProductsService
     
     
 }
