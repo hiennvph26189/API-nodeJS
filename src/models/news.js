@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   News.init({
     tieuDe: DataTypes.STRING,
     anhTinTuc: DataTypes.STRING,
+    tomTatTinTuc: DataTypes.STRING,
     moTa: DataTypes.STRING,
   }, {
     sequelize,
