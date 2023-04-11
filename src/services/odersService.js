@@ -1,4 +1,7 @@
 import db from "../models/index";
+const { Sequelize } = require('sequelize');
+const { QueryTypes } = require('sequelize');
+import sequelize from "../../src/config/queryDatabase"
 const Op = require('sequelize').Op;
 let checkProducts = (id)=>{
     return new Promise(async (resolve, reject)=>{
@@ -675,7 +678,13 @@ let handleCheckOrderService = (data)=>{
                 {status: 2},
                 {where: {id: id}}
              )
-            arrCartsUser.map((item)=>{
+            arrCartsUser.map(async(item)=>{
+                await db.Carts.update(
+                    {status:2
+                        
+                    },
+                    {where: {id: item.id}}
+                )
                 arrProduct.map( async(products)=>{
                     if(item.ipSanPham === products.id){
                         await db.Products.update(
@@ -707,6 +716,7 @@ let handleGiaoDonService = (data)=>{
     return new Promise(async(resolve, reject)=>{
        
         try {
+            console.log(data);
             let id = data.id
             let status = data.status
             let Order = await  db.Orders.findOne({
@@ -739,6 +749,80 @@ let handleGiaoDonService = (data)=>{
          
      }) 
 }
+
+let handleThongKeOrdersService = (data)=>{
+    return new Promise(async(resolve, reject)=>{
+       
+        try {
+            
+            if(data&& parseInt(data.key) ===2){
+                let tuNgay = data.tuNgay
+                let denNgay = data.denNgay
+               
+                const result = await sequelize.query(`
+                SELECT ipSanPham, SUM(soLuong) AS tongSoLuong, SUM(thanhTien) AS tongPrice
+                FROM carts
+                Where status = 2 And updatedAt BETWEEN '${tuNgay}' AND '${denNgay}'
+                
+                GROUP BY ipSanPham
+                ORDER BY tongSoLuong DESC
+                
+                `, { type: QueryTypes.SELECT });
+          
+                resolve({ 
+                    errCode:0,
+                    errMessage: 'thành công',
+                    result:result
+                 })       
+            }else if(parseInt(data.key) === 0){
+                console.log(data,"adk;fak");
+                let thang = data.thang
+                let nam = data.nam
+                const result = await sequelize.query(`
+                SELECT ipSanPham, SUM(soLuong) AS tongSoLuong, SUM(thanhTien) AS tongPrice, status
+                FROM carts
+                Where status = 2 And YEAR(updatedAt) = ${parseInt(nam)} AND MONTH(updatedAt) = ${parseInt(thang)}
+                
+                GROUP BY ipSanPham
+                ORDER BY tongSoLuong DESC
+                
+                `, { type: QueryTypes.SELECT });
+                console.log(result)
+                resolve({ 
+                    errCode:0,
+                    errMessage: 'thành công',
+                    result:result
+                 })       
+            }else if(parseInt(data.key) === 1){
+               
+                let ngay = data.ngay
+                console.log(ngay)
+                const result = await sequelize.query(`
+                SELECT ipSanPham, SUM(soLuong) AS tongSoLuong, SUM(thanhTien) AS tongPrice, status
+                FROM carts
+                Where status = 2 And DATE(updatedAt) = '${ngay}'
+                
+                GROUP BY ipSanPham
+                ORDER BY tongSoLuong DESC
+                
+                `, { type: QueryTypes.SELECT });
+               
+                resolve({ 
+                    errCode:0,
+                    errMessage: 'thành công',
+                    result:result
+                 })       
+            }
+               
+         
+  
+        } catch (error) {
+             reject(error);
+        }
+         
+         
+     }) 
+}
 module.exports  = {
     handleAddCart:handleAddCart,
     handleDeleteCart:handleDeleteCart,
@@ -752,6 +836,7 @@ module.exports  = {
     handleHuyDonThanhCongService:handleHuyDonThanhCongService,
     handleDeleteOrderService:handleDeleteOrderService,
     handleCheckOrderService:handleCheckOrderService,
-    handleGiaoDonService:handleGiaoDonService
+    handleGiaoDonService:handleGiaoDonService,
+    handleThongKeOrdersService:handleThongKeOrdersService
     
 }

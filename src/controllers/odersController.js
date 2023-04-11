@@ -180,6 +180,24 @@ let handleGiaoDonOrder = async (req, res) => {
         })
      } 
 }
+let handleThongKeOrders = async (req, res) => {
+    try {
+        
+        let data = req.query
+       
+        let message = await  odersService.handleThongKeOrdersService(data)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+
+
+
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     } 
+}
 
 module.exports = {
     handleOdersProducts: handleOdersProducts,
@@ -194,6 +212,7 @@ module.exports = {
     handleHuyDonThanhCongProducts:handleHuyDonThanhCongProducts,
     handleDeleteOrder:handleDeleteOrder,
     handleCheckOrder:handleCheckOrder,
-    handleGiaoDonOrder:handleGiaoDonOrder
+    handleGiaoDonOrder:handleGiaoDonOrder,
+    handleThongKeOrders:handleThongKeOrders
   
 }

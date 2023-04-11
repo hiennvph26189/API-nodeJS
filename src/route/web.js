@@ -73,6 +73,7 @@ let initWebRouter = (app)=>{
     router.delete('/api/delete-orders',odersController.handleDeleteOrder);
     router.put('/api/check-orders',odersController.handleCheckOrder);
     router.put('/api/giao-don-orders',odersController.handleGiaoDonOrder);
+    router.get('/api/thong-ke-orders',odersController.handleThongKeOrders);
 
 
 
@@ -94,7 +95,7 @@ let initWebRouter = (app)=>{
     router.put('/api/edit-profile-member',memberController.handleEditProfileMember);
     router.get('/api/get-all-product-category',productController.handleGetAllProductsCategories);
 
-
+    // thống kê
 
 
     return app.use("/",router)
