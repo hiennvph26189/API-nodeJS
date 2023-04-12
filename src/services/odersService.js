@@ -329,7 +329,11 @@ let handleLichSuOrderCart = (id)=>{
                 })
                 let getCarts = await db.Carts.findAll({
                     where: {idUser: id,
-                            status : 1,
+                        [Op.or]: [
+                            { status: 1 },
+                            { status: 2 },
+                            { status: 3 }
+                          ]
                             
                     },
                     order: [
@@ -472,7 +476,11 @@ let handleGetAllOrder = (status)=>{
                
                  let getCarts = await db.Carts.findAll({
                     where: {
-                            status : 1,
+                        [Op.or]: [
+                            { status: 1 },
+                            { status: 2 },
+                            { status: 3 }
+                          ]
                             
                     },
                     order: [
@@ -506,7 +514,12 @@ let handleGetAllOrder = (status)=>{
                
                  let getCarts = await db.Carts.findAll({
                     where: {
-                            status : 1,
+                            
+                            [Op.or]: [
+                                { status: 1 },
+                                { status: 2 },
+                                { status: 3 }
+                              ]
                             
                     },
                     order: [
