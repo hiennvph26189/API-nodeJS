@@ -240,12 +240,11 @@ let EditMembersService = (data)=>{
                 
                 members.tenThanhVien= data.tenThanhVien,
                 members.gioiTinh= data.gioiTinh,
-
                 members.anhDaiDien= data.anhDaiDien,
-                members.anhCK= data.anhCK,
+               
                 members.soDienThoai= data.soDienThoai,
                 members.diaChi= data.diaChi,
-                members.tienTk= members.tienTk+data.tienNap,
+                members.tienTk= data.tienTk,
                 members.status= data.status,
 
             await members.save()
@@ -423,6 +422,73 @@ let huyNapTienMembersServiceAdmin = (id)=>{
         
     })
 }
+let getOneMember = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+       try {
+        // console.log(data.idUser);
+        // let isExit = checkUserMember(data.idUser)
+        // console.log(isExit)
+        
+      
+           let member =  await db.Members.findOne(
+                
+                {where: {id:id}}
+             )
+            if(member){
+                resolve({
+                    errCode: 0,
+                    errMessage:"Đã hủy nạp tiền",
+                    member:member
+                })
+            }else{
+                resolve({
+                    errCode: 1,
+                    errMessage:"Tài khoản không tồn tại",
+                    member:{}
+                })
+            }
+            
+          
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
+let deleteMembersService = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+       try {
+        // console.log(data.idUser);
+        // let isExit = checkUserMember(data.idUser)
+        // console.log(isExit)
+            let members = await db.Members.findOne({id:id})
+        if(members){
+            await db.Members.destroy(
+              
+                {where: {id:id}}
+             )
+             resolve({
+                errCode: 0,
+                errMessage:"Đã Xóa tài khoản"
+            })
+        }else{
+            resolve({
+                errCode: 1,
+                errMessage:"user không tồn tại"
+            })
+        }
+           
+          
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
 module.exports  = {
     handleGetAllMembers:handleGetAllMembers,
     AddMembersService:AddMembersService,
@@ -430,10 +496,12 @@ module.exports  = {
     ProfileMembersService:ProfileMembersService,
     EditProfileMembersService:EditProfileMembersService,
     EditMembersService:EditMembersService,
+    deleteMembersService:deleteMembersService,
     napTienMembersService:napTienMembersService,
     lichSuNapTienMembersService:lichSuNapTienMembersService,
     napTienMembersServiceAdmin:napTienMembersServiceAdmin,
-    huyNapTienMembersServiceAdmin:huyNapTienMembersServiceAdmin
+    huyNapTienMembersServiceAdmin:huyNapTienMembersServiceAdmin,
+    getOneMember:getOneMember
     
     
 }

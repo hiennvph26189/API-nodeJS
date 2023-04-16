@@ -1,7 +1,7 @@
 import db from "../models/index";
 
-
-
+import sequelize from "../../src/config/queryDatabase"
+const { QueryTypes } = require('sequelize');
 
 let handleGetAllProductsService = (page)=>{
     return new Promise(async(resolve, reject)=>{
@@ -56,11 +56,30 @@ let handleGetAllTotalProductsService = ()=>{
                 ]
             });
             let totalProducts = await db.Products.findAll();
+            let sanPhamMuaNhieu = await sequelize.query(`
+            SELECT *
+            FROM products
+            Where luotMua > 0 
+           
+            ORDER BY luotMua DESC
+            LIMIT 7
+            
+            `, { type: QueryTypes.SELECT });
+             let sale = await sequelize.query(`
+            SELECT *
+            FROM products
+            Where sale > 25 
+           
+            ORDER BY sale DESC
+            LIMIT 5
+            
+            `, { type: QueryTypes.SELECT });
             res.errCode = 0;
             res.errMessage = "OK",
-
             res.categories = categories;
             res.totalProducts = totalProducts;
+            res.sanPhamMuaNhieu = sanPhamMuaNhieu;
+            res.sale = sale;
             
             resolve(res)
             
@@ -78,10 +97,7 @@ let handleGetAllProductsCategoriesService = (idCategories)=>{
         try {
             let res = {}
             let products = await db.Products.findAll(
-                {
-                where: {idDanhSach: idCategories}
-                
-                },{
+               {
                     order: [
                         ['id', 'DESC'],
                        

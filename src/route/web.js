@@ -81,6 +81,7 @@ let initWebRouter = (app)=>{
     // API Members webADmin
     router.get('/api/get-all-members',memberController.handleGetAllMenbers);
     router.put('/api/edit-members',memberController.handleEditMenbers);
+    router.delete('/api/delete-members',memberController.handleDeleteMenbers);
     router.post('/api/naptien-members',memberController.handleNapTienMenbers);
     router.get('/api/lich-su-naptien-members',memberController.handleLichSuNapMenbers);
     router.get('/api/lich-su-naptien-members-admin',memberController.handleLichSuNapMenbersAdmin);
@@ -90,6 +91,7 @@ let initWebRouter = (app)=>{
 
     // API trên app điện thoại
     router.post('/api/add-member',memberController.handleAddMembers);
+    router.get('/get/one-member',memberController.handleGetOneMembers);
     router.post('/api/login-member',memberController.handleLoginMember);
     router.post('/api/profile-member',memberController.handleProfileMember);
     router.put('/api/edit-profile-member',memberController.handleEditProfileMember);
