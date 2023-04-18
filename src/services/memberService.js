@@ -489,6 +489,38 @@ let deleteMembersService = (id)=>{
         
     })
 }
+let DeleteNapTienMember = (id)=>{
+    return new Promise(async(resolve, reject)=>{
+        
+       try {
+        // console.log(data.idUser);
+        // let isExit = checkUserMember(data.idUser)
+        // console.log(isExit)
+            let Price = await db.Prices.findOne({id:id})
+        if(Price&& Price.status == 1){
+            await db.Prices.destroy(
+              
+                {where: {id:id,status: 1}}
+             )
+             resolve({
+                errCode: 0,
+                errMessage:"Đã Xóa Price"
+            })
+        }else{
+            resolve({
+                errCode: 1,
+                errMessage:"Price không tồn tại"
+            })
+        }
+           
+          
+       } catch (error) {
+            reject(error);
+       }
+        
+        
+    })
+}
 module.exports  = {
     handleGetAllMembers:handleGetAllMembers,
     AddMembersService:AddMembersService,
@@ -501,7 +533,8 @@ module.exports  = {
     lichSuNapTienMembersService:lichSuNapTienMembersService,
     napTienMembersServiceAdmin:napTienMembersServiceAdmin,
     huyNapTienMembersServiceAdmin:huyNapTienMembersServiceAdmin,
-    getOneMember:getOneMember
+    getOneMember:getOneMember,
+    DeleteNapTienMember:DeleteNapTienMember
     
     
 }

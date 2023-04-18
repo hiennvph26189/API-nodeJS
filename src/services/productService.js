@@ -60,20 +60,19 @@ let handleGetAllTotalProductsService = ()=>{
             SELECT *
             FROM products
             Where luotMua > 0 
-           
             ORDER BY luotMua DESC
             LIMIT 7
             
-            `, { type: QueryTypes.SELECT });
-             let sale = await sequelize.query(`
+            `, { type: QueryTypes.SELECT }); 
+           
+            let sale = await sequelize.query(`
             SELECT *
             FROM products
             Where sale > 25 
-           
             ORDER BY sale DESC
-            LIMIT 5
+            LIMIT 7
             
-            `, { type: QueryTypes.SELECT });
+            `, { type: QueryTypes.SELECT }); 
             res.errCode = 0;
             res.errMessage = "OK",
             res.categories = categories;
@@ -92,26 +91,54 @@ let handleGetAllTotalProductsService = ()=>{
          
      }) 
 }
-let handleGetAllProductsCategoriesService = (idCategories)=>{
+let handleGetAllCategoriesProductService = (id)=>{
     return new Promise(async(resolve, reject)=>{
         try {
-            let res = {}
-            let products = await db.Products.findAll(
-               {
-                    order: [
-                        ['id', 'DESC'],
-                       
-                    ]
-                }
-            );
+            console.log(id)
+            if(id && id==="luotMuaNhieu"){
+                let getAllLuotMuaNhieu = await sequelize.query(`
+                SELECT *
+                FROM products
+                Where luotMua > 0 
+                ORDER BY luotMua DESC
+                `, { type: QueryTypes.SELECT });
+                resolve({
+                    errCode: 0,
+                    errMessage: "OK",
+                    getAllLuotMuaNhieu:getAllLuotMuaNhieu
+                })
+
+            }else if(id && id==="hotSale"){
+                let getHotSaleAll = await sequelize.query(`
+                SELECT *
+                FROM products
+                Where sale > 25 
+                ORDER BY sale DESC
+               
+                
+                `, { type: QueryTypes.SELECT }); 
+                resolve({
+                    errCode: 0,
+                    errMessage: "OK",
+                    getHotSaleAll:getHotSaleAll
+                })
+            }else{
+                let products = await sequelize.query(`
+                SELECT *
+                FROM products
+                Where idDanhSach = ${id}
+                ORDER BY id DESC
+                `, { type: QueryTypes.SELECT });
+
+                resolve({
+                    errCode: 0,
+                    errMessage: "OK",
+                    products:products})
+            }
+           
+           
             
-            res.errCode = 0;
-            res.errMessage = "OK",
-            res.products = products;
-            
-            resolve(res)
-            
-         resolve(res);
+       
  
         } catch (error) {
              reject(error);
@@ -231,13 +258,18 @@ let handleGetOneProductService = (id)=>{
             
          });
          let arProduct = await  db.Products.findAll(
-            {where: {idDanhSach : products.idDanhSach,
-                }
+            {
+                where: {idDanhSach : products.idDanhSach,
+                },
+                limit: 5,
+                order: [
+                    ['id', 'DESC'],
+                   
+                ]
+              
                     
-            },
-            {limit: 5}
-            
-            
+            }
+  
          );
          if(!products){
             resolve({
@@ -320,9 +352,11 @@ module.exports  = {
     deleteProduct:deleteProduct,
     editProductsService:editProductsService,
     handleGetProductsService:handleGetProductsService,
-    handleGetAllProductsCategoriesService,
+    
     handleGetOneProductService:handleGetOneProductService,
-    handleGetAllTotalProductsService:handleGetAllTotalProductsService
+    handleGetAllTotalProductsService:handleGetAllTotalProductsService,
+    handleGetAllCategoriesProductService:handleGetAllCategoriesProductService,
+  
     
     
 }

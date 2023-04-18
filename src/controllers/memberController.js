@@ -233,6 +233,22 @@ let handleGetOneMembers = async (req, res) => {
      }
    
 };
+let handleDeleteNapTienMenber = async (req, res) => {
+    try {
+        let id = req.query.id
+        
+        let message = await  memberService.DeleteNapTienMember(id)
+        console.log(message)
+        return res.status(200).json(message)
+     } catch (error) {
+         console.log("Lỗi phân quyền",error)
+        return res.status(200).json({
+             errCode: -1,
+             errMessage: 'Không kết nối được với sever'
+        })
+     }
+   
+};
 
 
 
@@ -249,6 +265,7 @@ module.exports = {
     handleLichSuNapMenbersAdmin:handleLichSuNapMenbersAdmin,
     handleNapTienMenbersADmin:handleNapTienMenbersADmin,
     handleHuyNapTienMenbersADmin:handleHuyNapTienMenbersADmin,
-    handleGetOneMembers:handleGetOneMembers
+    handleGetOneMembers:handleGetOneMembers,
+    handleDeleteNapTienMenber:handleDeleteNapTienMenber
     
 }

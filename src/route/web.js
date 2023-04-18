@@ -58,6 +58,9 @@ let initWebRouter = (app)=>{
     router.post('/api/get-product',productController.handleGetProduct);
     router.post('/api/post-image-product',uploadCloud.single('image'),productController.handleUploadFileProduct);
     router.post('/api/delete-image-product',productController.handleDeleteFileProduct);
+    router.get('/api/get-all-catygory-product',productController.handleGetAllCategoryProduct);
+    
+  
 
     router.get('/api/user-carts-product',odersController.handleGetUserCartProducts);
    
@@ -87,6 +90,7 @@ let initWebRouter = (app)=>{
     router.get('/api/lich-su-naptien-members-admin',memberController.handleLichSuNapMenbersAdmin);
     router.put('/api/naptien-members-admin',memberController.handleNapTienMenbersADmin);
     router.put('/api/huynaptien-members-admin',memberController.handleHuyNapTienMenbersADmin);
+    router.delete('/api/delete-nap-tien-Member',memberController.handleDeleteNapTienMenber);
   
 
     // API trên app điện thoại
